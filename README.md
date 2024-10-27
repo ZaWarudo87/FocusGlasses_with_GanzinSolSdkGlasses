@@ -88,7 +88,7 @@ So please use this program with honesty XD
 * Modules offered by Ganzin
 ### Refenrce Web
 * [yolov3](https://github.com/ultralytics/yolov3)
-* [OpenCV]([https://github.com/ultralytics/yolov3](https://opencv.org/))
+* [OpenCV](https://opencv.org/)
 * [oled](https://github.com/ThingPulse/esp8266-oled-ssd1306)
 
 ### Special Thanks
