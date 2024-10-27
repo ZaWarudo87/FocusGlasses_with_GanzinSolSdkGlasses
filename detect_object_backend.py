@@ -51,7 +51,7 @@ def detect():
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
-    address = '192.168.137.254'
+    address = 'Sol SDK IP'
     port = '8080'
     sc = SyncClient(address, port)
 
