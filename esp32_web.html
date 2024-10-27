@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang='zh-TW'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>學習專注力追蹤</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F7F8FA;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+        }
+        .stats-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .stats-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        .chart-container {
+            background-color: #FFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='stats-card'>
+            <h3>Study Time：<t id='studyTime'>Loading...</t></h3>
+        </div>
+        <div class='stats-card'>
+            <h3>Max Focus Duration：<t id='maxFocusDuration'>Loading...</t></h3>
+        </div>
+        <div class='stats-card'>
+            <h3>Average Distraction Time：<t id='averageDistractionInterval'>Loading...</t></h3>
+        </div>
+        <div class='chart-container'>
+            <h3>Distraction Chart</h3>
+            <canvas id='distractionChart'></canvas>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script>
+        const backend_ip = '192.168.137.145';
+        const backend_port = '5000';
+
+        const startTime = new Date();
+
+        function sec2time(sec){
+            const hours = String(Math.floor(sec / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+            const seconds = String(sec % 60).padStart(2, '0');
+
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        async function fetchFocusData() {
+            try {
+                const response = await fetch(`http://${backend_ip}:${backend_port}/`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data;
+                } else {
+                    console.error('HTTP Error:', response.status, response.statusText);
+                    return -1;
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                return -1;
+            }
+        }
+
+        async function updateStats() {
+            const data = await fetchFocusData();
+
+            console.log(data);
+            if(data == -1)
+                return;
+
+            document.getElementById('studyTime').textContent = (data.studyStartTime != -1 ? sec2time(data.now - data.studyStartTime) : 'not studying');
+            document.getElementById('maxFocusDuration').textContent = (data.studyStartTime != -1 ? sec2time(Math.max(data.maxStudyDuration, (data.studyTime != -1 ? data.now - data.studyTime : 0))) : 'not studying');
+            document.getElementById('averageDistractionInterval').textContent = (data.studyStartTime != -1 ? sec2time(Math.round(data.distractionsInterval / ((data.now - data.studyStartTime) / 600))) + ' per 10 min' : 'not studying');
+            
+            if(data.distractionsTimePerTenMin.length > 0)
+                updateDistractionChart(data.distractionsTimePerTenMin);
+        }
+
+        function updateDistractionChart(data) {
+            const ctx = document.getElementById('distractionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: data.length }, (_, i) => `${(i + 1) * 10} min`),
+                    datasets: [{
+                        label: 'Distraction Time (sec)',
+                        data: data,
+                        backgroundColor: 'rgba(93, 173, 226, 0.2)',
+                        borderColor: '#5DADE2',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        setInterval(updateStats, 1000);
+        updateStats();
+    </script>
+</body>
+</html>
