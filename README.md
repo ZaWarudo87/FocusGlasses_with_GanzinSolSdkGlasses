@@ -67,7 +67,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Contact Information for the Distributor
 * 洪翠憶 (k112700044.mg12@nycu.edu.tw)
-* 黃浩誠 (jerry138138.ee13@nycu.edu.tw)
+* 黃浩誠 (jerry138138.ee13@nycu.edu.tw) - my boyfriend ><
 
 ## A List of Known Bugs
 Because of technical problems, we cannot judge what the users are exactly doing. The judging algorithm is measuring user's sight to decide whether the user is focuing on something.
