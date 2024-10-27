@@ -14,11 +14,11 @@
 #define TICK 5000         // 每多少刻抓一次眼動儀資料
 
 // 你的手機熱點
-#define WIFI_SSID "韓劇大長今"
-#define WIFI_PASSWORD "90082201"
+#define WIFI_SSID "Your Wifi"
+#define WIFI_PASSWORD "Your Password"
 
 // 你的後端資訊
-#define BACKEND_IP "192.168.137.145"
+#define BACKEND_IP "Your PC IP"
 #define BACKEND_PORT "5000"
 
 WebServer server(80);  // Server 物件宣告
@@ -92,7 +92,7 @@ String index_html = R"rawliteral(
 
     <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
     <script>
-        const backend_ip = '192.168.137.145';
+        const backend_ip = 'Your PC IP';
         const backend_port = '5000';
 
         const startTime = new Date();
